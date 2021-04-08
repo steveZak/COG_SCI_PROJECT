@@ -19,5 +19,5 @@ router.post('/addResponse', async function (req, res) {
 app.use('/', router);
 app.use(express.static('build'));
 
-const port = 8081;
-app.listen(port, () => {console.log("Listening on port 8081.")});
+const port = 8080;
+app.listen(port, () => {console.log("Listening on port 8080.")});
