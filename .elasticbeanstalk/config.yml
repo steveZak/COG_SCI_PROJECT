@@ -1,0 +1,5 @@
+branch-defaults:
+  main:
+    environment: Storytellingandcognition-env
+global:
+  profile: eb-cli

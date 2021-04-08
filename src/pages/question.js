@@ -11,7 +11,8 @@ export default class QuestionScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rating: 5
+            rating: 5,
+            timestamp: Date.now()
         }
     }
 
@@ -21,19 +22,23 @@ export default class QuestionScreen extends React.Component {
 
     handleBack() {
         this.props.history.goBack();
-        // this.props.history.push("/");
     }
 
     addResponse = async () => {
         try {
-            const apiUrl = "http://localhost:5000/addResponse?sessionID=" + this.props.location.state.sessionID
-                + "&groupID=" + this.props.location.state.groupID + "&q1=" + this.props.location.state.q1Rating + "&q2=" + this.state.rating;
-            await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+            const apiUrl = "/addResponse?sessionID=" + this.props.location.state.sessionID
+                + "&groupID=" + this.props.location.state.groupID + "&q1=" + this.props.location.state.q1Rating 
+                + "&q1Timestamp=" + this.props.location.state.q1Timestamp + "&q2=" + this.state.rating
+                + "&q2Timestamp=" + this.state.timestamp;
+            await fetch(
+                apiUrl, 
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
-            });
+            );
         } catch (error) {
             console.log(error);
             console.log("failed to add a student");
@@ -41,12 +46,32 @@ export default class QuestionScreen extends React.Component {
     }
 
     render() {
+
+        var question_a = "From 1 to 10, how likely do you think empathy and attachment can be established between human and machine/robot?";
+        var question_b = "From 1 to 10, how likely do you think that human subjective experiences can be digitized into data?";
+        var question_2_prefix = "Putting the film aside, "
+        var question = ''
+
+        if (this.props.location.state.progress=="q2") {
+            question += question_2_prefix;
+            if (this.props.location.state.groupID=='A') {
+                question += question_a.toLowerCase();
+            } else {
+                question += question_b.toLowerCase();
+            }
+        } else {
+            if (this.props.location.state.groupID=='A') {
+                question += question_b;
+            } else {
+                question += question_a;
+            }
+        }
+
         return (
             <div style={{ position: "absolute", alignSelf: "center", marginLeft: "1%" }}>
                 <div>
                     <p>
-                        {(this.props.location.state.groupID=='A'&&this.props.location.state.progress=="q1")||(this.props.location.state.groupID=='B'&&this.props.location.state.progress=="q2")?"From 1 to 10, how likely do you think an empathy and attachment can be established between human and machine/robot/AI?":
-                        "From 1 to 10, how likely do you think that human subjective experiences can be digitized into data?"}
+                        {question}
                     </p>
                 </div>
                 <Slider
@@ -59,8 +84,10 @@ export default class QuestionScreen extends React.Component {
                     renderMark={mark => {
                         return mark;
                     }}
-                    onChange={val =>{
-                        this.state.rating = val;}}
+                    onChange={val => {
+                        this.state.rating = val;
+                        this.state.timestamp = Date.now();
+                    }}
                 />
                 <div>
                     <Button onClick={() => this.props.history.goBack()}
@@ -68,15 +95,22 @@ export default class QuestionScreen extends React.Component {
                             {"Back"}
                     </Button>
                     <Button onClick={() => {
-                        if (this.props.location.state.progress=="q2"){
-                            this.addResponse();
-                        }
-                        this.props.history.push({pathname: this.props.location.state.progress == "q1" ? "/video" : "/conclusion",
-                                                state: {progress: this.props.location.state.progress == "q1" ? "q2" : "done",
-                                                        q1Rating: this.state.rating,
-                                                        sessionID: this.props.location.state.sessionID,
-                                                        groupID: this.props.location.state.groupID}});
-                    }}
+                            if (this.props.location.state.progress=="q2"){
+                                this.addResponse();
+                            }
+                            this.props.history.push(
+                                {
+                                    pathname: this.props.location.state.progress == "q1" ? "/video" : "/conclusion",
+                                    state: {
+                                        progress: this.props.location.state.progress == "q1" ? "q2" : "done",
+                                        q1Rating: this.state.rating,
+                                        q1Timestamp: this.state.timestamp,
+                                        sessionID: this.props.location.state.sessionID,
+                                        groupID: this.props.location.state.groupID
+                                    }
+                                }
+                            );
+                        }}
                         appearance="subtle">
                         {"Next"}
                     </Button>

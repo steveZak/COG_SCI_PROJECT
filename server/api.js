@@ -1,102 +1,34 @@
-const sqlite3 = require('sqlite3').verbose();
-// var args = { filePath : "reponses.db", outputPath : "SPRING2021.csv" };
+var AWS = require('aws-sdk');
+AWS.config.loadFromPath('./server/config.json');
+var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
-
-var create = (req, res) => {
-  let db = new sqlite3.Database('responses.db', (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    // - Session ID
-    // - Group ID
-    // - Q1 answer
-    // - Q1 timestamp
-    // - Q2 answer
-    // - Q2 timestamp
-    db.run("CREATE TABLE Responses(SessionID int, GroupID varchar(1), Q1 int, Q2 int);");
-  });
-}
-
-var read = async (req, res) => {
+var addResponse = (sessionID, groupID, q1, q1Timestamp, q2, q2Timestamp) => {
   return new Promise((resolve, reject) => {
-    var responses = [];
-    let db = new sqlite3.Database('responses.db', sqlite3.OPEN_READONLY, (err) => {
-      if (err) {
-        console.error(err.message);
+    var params = {
+      TableName: 'cognitive_science_data',
+      Item: {
+        'session_id' : { S : sessionID },
+        'group_id' : { S : groupID },
+        'q1' : { N : q1 },
+        'q1Timestamp' : {N : q1Timestamp },
+        'q2' : { N : q2 },
+        'q2Timestamp' : {N : q2Timestamp },
       }
-      db.serialize(() => {
-        db.each("SELECT * FROM Responses", (err, row) => {
-          if (err) {
-            console.error(err.message);
-          }
-          responses.push({groupID: row.GroupID, q1: row.Q1, q2: row.Q2});
-        });
-      })
-      db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        resolve(responses);
-      });
-    })
-  });
-}
-
-var addResponse = (sessionID, groupID, q1, q2) => {
-  return new Promise((resolve, reject) => {
-    let db = new sqlite3.Database('responses.db', sqlite3.OPEN_READWRITE, (err) => {
+    };
+    
+    // Call DynamoDB to add the item to the table
+    ddb.putItem(params, function(err, data) {
       if (err) {
-        console.error(err.message);
-      }
-      db.run("INSERT INTO Responses VALUES("+sessionID+", '"+groupID+"', "+q1+", "+q2+")")
-      db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
+        console.log("Error", err);
+      } else {
+        console.log("Success", data);
         resolve();
-      });
-    });
-  });
-}
-
-var getScores = (id, lab) => {
-  return new Promise((resolve, reject) => {
-    scores = [];
-    let db = new sqlite3.Database('SPRING2021.db', sqlite3.OPEN_READWRITE, (err) => {
-      if (err) {
-        console.error(err.message);
       }
-      // db.run("UPDATE Scores SET " + lab + " = 100 WHERE GTID = " + id + ";");
-      db.serialize(() => {
-        db.each("SELECT * FROM Scores", (err, row) => {
-          if (err) {
-            console.error(err.message);
-          }
-          scores.push(row); // iterate over columns?
-        });
-      })
-      db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        resolve(scores);
-      });
     });
   });
 }
 
-getCSV = () => {
-  return new Promise((resolve, reject) => {
-    sqliteToCsv.toCSV(args, (err) => { });
-  });
-}
 
 module.exports = {
-  create: create,
-  read: read,
   addResponse: addResponse,
-  getScores: getScores,
-  getCSV: getCSV,
 };
-
-// create();

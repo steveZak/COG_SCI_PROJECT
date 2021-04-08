@@ -15,13 +15,18 @@ export default class IntroScreen extends React.Component {
                 </div>
                 <div>
                 <Button onClick={() => {
-                                        this.props.history.push({pathname: "/question",
-                                                                state: {sessionID: Date.now(),
-                                                                        groupID: Math.round(Math.random())==0?'A':'B',
-                                                                        progress: "q1"}});
-                                        }}
-                        appearance="subtle">
-                            Begin
+                    this.props.history.push(
+                        {
+                            pathname: "/question",
+                            state: {
+                                sessionID: Date.now(),
+                                groupID: Math.round(Math.random())==0?'A':'B',
+                                progress: "q1"
+                            }
+                        }
+                    );}}
+                    appearance="subtle">
+                        Begin
                 </Button>
                 </div>
             </div>

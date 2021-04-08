@@ -60,6 +60,7 @@ export default class VideoScreen extends React.Component {
                                                     state: {sessionID: this.props.location.state.sessionID,
                                                             groupID: this.props.location.state.groupID,
                                                             q1Rating: this.props.location.state.q1Rating,
+                                                            q1Timestamp: this.props.location.state.q1Timestamp,
                                                             progress: this.props.location.state.progress}});
                         }}
                         appearance="subtle">
