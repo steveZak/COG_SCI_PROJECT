@@ -1,7 +1,5 @@
 import React from "react";
-// import {CSVLink, CSVDownload} from 'react-csv';
-import { Button, Drawer, Icon, Slider } from 'rsuite';
-import ReactPlayer from 'react-player';
+import { Button, Slider } from 'rsuite';
 import 'history';
 import 'rsuite/dist/styles/rsuite-default.css';
 import Timer from "react-compound-timer/build";
@@ -68,33 +66,42 @@ export default class QuestionScreen extends React.Component {
         }
 
         return (
-            <div style={{ position: "absolute", alignSelf: "center", marginLeft: "1%" }}>
-                <div>
+            <div>
+                <h1 id="startTitle">Please Answer</h1>
+                <div id="Content">
                     <p>
                         {question}
                     </p>
                 </div>
-                <Slider
-                    defaultValue={5}
-                    min={1}
-                    step={1}
-                    max={10}
-                    graduated
-                    progress
-                    renderMark={mark => {
-                        return mark;
-                    }}
-                    onChange={val => {
-                        this.state.rating = val;
-                        this.state.timestamp = Date.now();
-                    }}
-                />
+                <div class="slidecontainer">
+                    <Slider
+                        class="slider"
+                        defaultValue={5}
+                        min={1}
+                        step={1}
+                        max={10}
+                        graduated
+                        progress
+                        renderMark={mark => {
+                            return mark;
+                        }}
+                        onChange={val => {
+                            this.state.rating = val;
+                            this.state.timestamp = Date.now();
+                        }}
+                    />
+                </div>
                 <div>
-                    <Button onClick={() => this.props.history.goBack()}
-                            appearance="subtle">
+                    <Button 
+                        id="Back"
+                        onClick={() => this.props.history.goBack()}
+                        appearance="subtle"
+                    >
                             {"Back"}
                     </Button>
-                    <Button onClick={() => {
+                    <Button 
+                        id="Next"
+                        onClick={() => {
                             if (this.props.location.state.progress=="q2"){
                                 this.addResponse();
                             }

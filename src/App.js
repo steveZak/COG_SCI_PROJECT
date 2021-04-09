@@ -10,30 +10,26 @@ import {
   Switch,
   withRouter
 } from "react-router-dom";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 import './App.css';
+import './index.css';
 import { Component } from 'react';
 
-const AnimatedSwitch = withRouter(({ location }) => (
-  <TransitionGroup>
-    <CSSTransition key={location.key} classNames="slide" timeout={500}>
-      <Switch location={location}>
-                <Route exact path='/' component={IntroScreen}/>
-                <Route path='/video' component={VideoScreen}/>
-                <Route path='/question' component={QuestionScreen}/>
-                <Route path='/conclusion' component={ConclusionScreen}/>
-      </Switch>
-    </CSSTransition>
-  </TransitionGroup>
-));
+const RouterSwitch = withRouter(({ location }) => (
 
+  <Switch location={location}>
+    <Route exact path='/' component={IntroScreen}/>
+    <Route path='/video' component={VideoScreen}/>
+    <Route path='/question' component={QuestionScreen}/>
+    <Route path='/conclusion' component={ConclusionScreen}/>
+  </Switch>
+));
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
         <Layout>
         </Layout>
-          <AnimatedSwitch style={{position: "relative"}}/>
+        <RouterSwitch/>
       </BrowserRouter>
     );
   }

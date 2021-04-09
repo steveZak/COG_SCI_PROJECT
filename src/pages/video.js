@@ -16,17 +16,15 @@ export default class VideoScreen extends React.Component {
     }
 
     componentDidMount() {
-        console.log("hello")
     }
 
     handleBack() {
         this.props.history.goBack();
-        // this.props.history.push("/");
     }
 
     getTimer() {
         return (
-            <Timer initialTime={5000}
+            <Timer initialTime={this.props.location.state.groupID=='A'? 440000:510000}
                     startImmediately={true}
                     direction="backward"
                     checkpoints={[
@@ -50,21 +48,29 @@ export default class VideoScreen extends React.Component {
 
     render() {
         return (
-            <div style={{ position: "absolute", alignSelf: "center", marginLeft: "1%"}}>
-                <ReactPlayer url={this.props.location.state.groupID=='A'?'https://youtu.be/an6DRN4flZM':'https://youtu.be/QP3YywgRx5A'} />
-                <p>Have a look at this video! You'll be able to continue once the video is over.</p>
+            <div>
+                <h1 id="startTitle">Watch Short Film</h1>
+                <ReactPlayer 
+                    id="film"
+                    url={this.props.location.state.groupID=='A'?'https://youtu.be/an6DRN4flZM':'https://youtu.be/QP3YywgRx5A'} 
+                />
+                <p id="Content">
+                    Please watch the short film below. You can move to the next step once you finish it. Enjoy!
+                </p>
                 {this.getTimer()}
-                <Button disabled={!this.state.timerup}
-                        onClick={() => {
-                            this.props.history.push({pathname: this.props.location.state.progress == "q2" ? "/question" : "/conclusion",
-                                                    state: {sessionID: this.props.location.state.sessionID,
-                                                            groupID: this.props.location.state.groupID,
-                                                            q1Rating: this.props.location.state.q1Rating,
-                                                            q1Timestamp: this.props.location.state.q1Timestamp,
-                                                            progress: this.props.location.state.progress}});
-                        }}
-                        appearance="subtle">
-                        {"Next"}
+                <Button 
+                    id="FilmNext"
+                    disabled={!this.state.timerup}
+                    onClick={() => {
+                        this.props.history.push({pathname: this.props.location.state.progress == "q2" ? "/question" : "/conclusion",
+                                                state: {sessionID: this.props.location.state.sessionID,
+                                                        groupID: this.props.location.state.groupID,
+                                                        q1Rating: this.props.location.state.q1Rating,
+                                                        q1Timestamp: this.props.location.state.q1Timestamp,
+                                                        progress: this.props.location.state.progress}});
+                    }}
+                    appearance="subtle">
+                    {"Next"}
                 </Button>
             </div>
         )
