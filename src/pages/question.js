@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Slider } from 'rsuite';
 import 'history';
 import 'rsuite/dist/styles/rsuite-default.css';
-import Timer from "react-compound-timer/build";
 
 
 export default class QuestionScreen extends React.Component {

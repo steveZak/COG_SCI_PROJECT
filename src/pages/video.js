@@ -1,6 +1,5 @@
 import React from "react";
-// import {CSVLink, CSVDownload} from 'react-csv';
-import { Button, Drawer, Icon } from 'rsuite';
+import { Button } from 'rsuite';
 import ReactPlayer from 'react-player';
 import 'history';
 import 'rsuite/dist/styles/rsuite-default.css';
@@ -35,10 +34,6 @@ export default class VideoScreen extends React.Component {
                     ]}>
                 {({ start, resume, pause, stop, reset, timerState }) => (
                     <React.Fragment>
-                        {/* <div>
-                            <Timer.Minutes /> minutes
-                            <Timer.Seconds /> seconds
-                        </div> */}
                         <br />
                     </React.Fragment>
                 )}
