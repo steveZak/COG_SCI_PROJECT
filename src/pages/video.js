@@ -35,10 +35,10 @@ export default class VideoScreen extends React.Component {
                     ]}>
                 {({ start, resume, pause, stop, reset, timerState }) => (
                     <React.Fragment>
-                        <div>
+                        {/* <div>
                             <Timer.Minutes /> minutes
                             <Timer.Seconds /> seconds
-                        </div>
+                        </div> */}
                         <br />
                     </React.Fragment>
                 )}
