@@ -7,8 +7,10 @@ export default class ConclusionScreen extends React.Component {
 
     render() {
         return (
-            <div>
-                <p id="Content">Thank you for completing this study. :) </p>
+            <div id="Content">
+                <p>Thank you for completing this study. :) </p>
+                <br></br>
+                <p>Here is your survey code {this.props.location.state.sessionID}.</p>
             </div>
         )
     }
